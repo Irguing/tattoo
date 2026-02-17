@@ -4,26 +4,26 @@ import * as React from "react";
 
 type GalleryImage = {
   id: string;
-  title: string;
+  title: string | null;
   alt: string | null;
   tags: string | null;
   url: string;
   filename: string;
-  mime: string;
-  size: number;
+  mime: string | null;
+  size: number | null;
   isPublished: boolean;
-  createdAt: Date;
+  createdAt: string;
 };
 
 function cx(...s: Array<string | false | null | undefined>) {
   return s.filter(Boolean).join(" ");
 }
 
-function formatBytes(bytes: number) {
-  if (!Number.isFinite(bytes) || bytes <= 0) return "—";
+function formatBytes(bytes: number | null | undefined) {
+  if (!Number.isFinite(bytes ?? NaN) || (bytes ?? 0) <= 0) return "—";
   const units = ["B", "KB", "MB", "GB"];
   let i = 0;
-  let n = bytes;
+  let n = bytes as number;
   while (n >= 1024 && i < units.length - 1) {
     n /= 1024;
     i++;
@@ -64,7 +64,6 @@ export default function GalleryAdminClient({
 
     setBusyDeleteId(id);
 
-    // Optimistic UI
     const prev = images;
     setImages((curr) => curr.filter((x) => x.id !== id));
 
@@ -72,7 +71,6 @@ export default function GalleryAdminClient({
       const res = await fetch(`/api/gallery/${id}`, { method: "DELETE" });
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        // rollback
         setImages(prev);
         throw new Error(`Delete failed (${res.status}): ${text.slice(0, 160)}`);
       }
@@ -86,6 +84,7 @@ export default function GalleryAdminClient({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     if (!file) {
       alert("Selecciona una imagen.");
       return;
@@ -97,7 +96,6 @@ export default function GalleryAdminClient({
 
     setBusyUpload(true);
     try {
-      // 1) Upload file (multipart/form-data)
       const fd = new FormData();
       fd.append("file", file);
 
@@ -114,7 +112,6 @@ export default function GalleryAdminClient({
         size: number;
       };
 
-      // 2) Create DB record (json)
       const create = await fetch("/api/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -133,15 +130,15 @@ export default function GalleryAdminClient({
       }
 
       const createdJson = JSON.parse(createText) as { image?: GalleryImage };
-      if (createdJson.image) {
-        // Insert instantáneo arriba (optimistic real)
-        setImages((prev) => [createdJson.image!, ...prev]);
-      } else {
-        // Fallback si el payload no vino como esperamos
-        await refreshList();
-      }
 
-      // Reset form
+const created = createdJson.image;
+if (created) {
+  setImages((prev) => [created, ...prev]);
+} else {
+  await refreshList();
+}
+
+
       setFile(null);
       setTitle("");
       setAlt("");
@@ -158,8 +155,10 @@ export default function GalleryAdminClient({
   const filtered = images.filter((img) => {
     if (onlyPublished && !img.isPublished) return false;
     if (!q.trim()) return true;
+
     const needle = q.toLowerCase();
-    const hay = `${img.title} ${img.tags ?? ""} ${img.filename}`.toLowerCase();
+    const safeTitle = img.title ?? "";
+    const hay = `${safeTitle} ${img.tags ?? ""} ${img.filename}`.toLowerCase();
     return hay.includes(needle);
   });
 
@@ -272,68 +271,74 @@ export default function GalleryAdminClient({
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((img) => (
-            <div key={img.id} className="overflow-hidden rounded-2xl border bg-white shadow-sm">
-              <div className="aspect-[4/3] bg-gray-100">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={img.url}
-                  alt={img.alt ?? img.title}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              </div>
+          {filtered.map((img) => {
+            const displayTitle = img.title ?? "(untitled)";
 
-              <div className="p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold text-gray-900">{img.title}</div>
-                    <div className="mt-1 truncate text-xs text-gray-500">
-                      {img.filename} · {formatBytes(img.size)}
+            return (
+              <div key={img.id} className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+                <div className="aspect-[4/3] bg-gray-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img.url}
+                    alt={img.alt ?? displayTitle}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-semibold text-gray-900">
+                        {displayTitle}
+                      </div>
+                      <div className="mt-1 truncate text-xs text-gray-500">
+                        {img.filename} · {formatBytes(img.size)}
+                      </div>
                     </div>
+
+                    <span
+                      className={cx(
+                        "shrink-0 rounded-full border px-2 py-1 text-xs font-medium",
+                        img.isPublished
+                          ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-700"
+                          : "border-amber-500/25 bg-amber-500/10 text-amber-800"
+                      )}
+                    >
+                      {img.isPublished ? "published" : "draft"}
+                    </span>
                   </div>
 
-                  <span
-                    className={cx(
-                      "shrink-0 rounded-full border px-2 py-1 text-xs font-medium",
-                      img.isPublished
-                        ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-700"
-                        : "border-amber-500/25 bg-amber-500/10 text-amber-800"
-                    )}
-                  >
-                    {img.isPublished ? "published" : "draft"}
-                  </span>
-                </div>
+                  {img.tags ? (
+                    <div className="mt-3 text-xs text-gray-600">
+                      <span className="font-medium text-gray-900">Tags:</span> {img.tags}
+                    </div>
+                  ) : null}
 
-                {img.tags ? (
-                  <div className="mt-3 text-xs text-gray-600">
-                    <span className="font-medium text-gray-900">Tags:</span> {img.tags}
+                  <div className="mt-4 flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={() => deleteImage(img.id)}
+                      disabled={busyDeleteId === img.id}
+                      className="rounded-xl border px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 disabled:opacity-60"
+                    >
+                      {busyDeleteId === img.id ? "Eliminando..." : "Delete"}
+                    </button>
+
+                    <a
+                      href={img.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-medium text-gray-700 underline decoration-gray-300 hover:text-gray-900"
+                      title="Abrir imagen"
+                    >
+                      Open
+                    </a>
                   </div>
-                ) : null}
-
-                <div className="mt-4 flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => deleteImage(img.id)}
-                    disabled={busyDeleteId === img.id}
-                    className="rounded-xl border px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 disabled:opacity-60"
-                  >
-                    {busyDeleteId === img.id ? "Eliminando..." : "Delete"}
-                  </button>
-
-                  <a
-                    href={img.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs font-medium text-gray-700 underline decoration-gray-300 hover:text-gray-900"
-                    title="Abrir imagen"
-                  >
-                    Open
-                  </a>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
