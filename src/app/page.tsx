@@ -1,6 +1,7 @@
 // src/app/page.tsx
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import Link from "next/link";
-
 import { Hero } from "@/components/home/Hero";
 import { About } from "@/components/home/About";
 import { GalleryTeaser } from "@/components/home/GalleryTeaser";
