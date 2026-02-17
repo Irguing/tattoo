@@ -4,6 +4,14 @@ import GalleryTeaserClient from "@/components/home/GalleryTeaser.client";
 
 export const dynamic = "force-dynamic";
 
+type RawTeaserImage = {
+  id: string;
+  title: string | null;
+  alt: string | null;
+  url: string;
+  tags: string | null;
+};
+
 type TeaserImage = {
   id: string;
   title: string;
@@ -13,7 +21,7 @@ type TeaserImage = {
 };
 
 export async function GalleryTeaser() {
-  const images: TeaserImage[] = await prisma.galleryImage.findMany({
+  const rawImages: RawTeaserImage[] = await prisma.galleryImage.findMany({
     where: { isPublished: true },
     orderBy: { createdAt: "desc" },
     take: 6,
@@ -25,6 +33,12 @@ export async function GalleryTeaser() {
       tags: true,
     },
   });
+
+  // ✅ Normalización segura aquí
+  const images: TeaserImage[] = rawImages.map((img) => ({
+    ...img,
+    title: img.title ?? "Untitled",
+  }));
 
   return (
     <section className="py-16 bg-green900 text-sand">
