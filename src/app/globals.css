@@ -1,0 +1,26 @@
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --sand: 243 235 221;  /* crema */
+  --ink:  11  12  16;   /* casi negro */
+  --g900:  14  59  46;  /* verde profundo */
+  --g700:  31 111  80;  /* verde medio */
+  --g500:  58 168 108;  /* verde vivo */
+  --neon:  69, 204, 45;  /* acento */
+  --rust: 198  60  46;  /* rojo/naranja */
+}
+
+html, body {
+  height: 100%;
+}
+
+body{
+  font-family: var(--font-body);
+  background: rgb(var(--sand));
+  color: rgb(var(--ink));
+}

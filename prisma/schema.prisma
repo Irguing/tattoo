@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Post {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String?
+  content     String
+  coverUrl    String?
+  tags        String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, createdAt])
+  @@index([createdAt])
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String?
+  alt         String?
+  tags        String?
+  url         String
+  filename    String
+  mime        String?
+  size        Int?
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([isPublished, createdAt])
+  @@index([createdAt])
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  idea      String
+  placement String?
+  size      String?
+  budget    String?
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+  @@index([createdAt])
+}
+
+model AdminUser {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
