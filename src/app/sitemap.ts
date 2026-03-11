@@ -4,6 +4,12 @@ import { absUrl } from "@/lib/seo/site";
 
 export const revalidate = 3600;
 
+function safeDate(value?: string): Date {
+  if (!value) return new Date();
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -25,7 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: absUrl("/bookings"),
+      url: absUrl("/book"),
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
@@ -34,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const markdownPostRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
     url: absUrl(`/blog/${post.slug}`),
-    lastModified: new Date(post.frontmatter.date ?? Date.now()),
+    lastModified: safeDate(post.frontmatter.date),
     changeFrequency: "monthly",
     priority: 0.6,
   }));
