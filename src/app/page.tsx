@@ -5,18 +5,20 @@ import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { CTA } from "@/components/home/CTA";
 import { Footer } from "@/components/layout/Footer";
 import BlogTeaser from "@/components/BlogTeaser";
-import { log } from "@/lib/logger";
+import { logError } from "@/lib/logger";
+import { getRequestIdFromHeaders } from "@/lib/observability";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Home() {
+  const requestId = await getRequestIdFromHeaders();
   return (
     <>
       <Hero />
       <About />
 
-      <SafeBlogTeaser />
+      <SafeBlogTeaser requestId={requestId} />
 
       <section className="bg-sand py-14">
         <div className="mx-auto max-w-6xl px-6">
@@ -48,36 +50,36 @@ export default async function Home() {
         </div>
       </section>
 
-      <SafeGalleryTeaser />
+      <SafeGalleryTeaser requestId={requestId} />
       <CTA />
       <Footer />
     </>
   );
 }
 
-async function SafeBlogTeaser() {
+async function SafeBlogTeaser({ requestId }: { requestId?: string }) {
   try {
     return BlogTeaser();
   } catch (error) {
-    log({
-      level: "error",
+    logError({
       scope: "home.safe-blog-teaser",
       msg: "Failed to render BlogTeaser",
-      data: { error: error instanceof Error ? error.message : "unknown" },
+      requestId,
+      error,
     });
     return null;
   }
 }
 
-async function SafeGalleryTeaser() {
+async function SafeGalleryTeaser({ requestId }: { requestId?: string }) {
   try {
     return await GalleryTeaser();
   } catch (error) {
-    log({
-      level: "error",
+    logError({
       scope: "home.safe-gallery-teaser",
       msg: "Failed to render GalleryTeaser",
-      data: { error: error instanceof Error ? error.message : "unknown" },
+      requestId,
+      error,
     });
 
     return (

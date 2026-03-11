@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { newRequestId, REQUEST_ID_HEADER } from "@/lib/observability";
 
 function getSessionCookieName(): string {
   return process.env.SESSION_COOKIE_NAME?.trim() || "admin_session";
@@ -7,7 +8,18 @@ function getSessionCookieName(): string {
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const res = NextResponse.next();
+
+  const requestHeaders = new Headers(req.headers);
+  const requestId = requestHeaders.get(REQUEST_ID_HEADER) ?? newRequestId();
+  requestHeaders.set(REQUEST_ID_HEADER, requestId);
+
+  const res = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  res.headers.set(REQUEST_ID_HEADER, requestId);
 
   // =========================
   // Security headers (global)
@@ -43,7 +55,9 @@ export function proxy(req: NextRequest) {
     if (!session) {
       const url = req.nextUrl.clone();
       url.pathname = "/admin/login";
-      return NextResponse.redirect(url);
+      const redirect = NextResponse.redirect(url);
+      redirect.headers.set(REQUEST_ID_HEADER, requestId);
+      return redirect;
     }
   }
 
@@ -51,7 +65,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)"],
 };

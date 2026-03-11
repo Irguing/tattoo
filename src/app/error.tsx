@@ -21,6 +21,12 @@ export default function GlobalError({ error, reset }: Props) {
         Ha ocurrido un error inesperado.
       </p>
 
+      {error.digest ? (
+        <p className="text-sm text-neutral-500">
+          Código de error: <span className="font-mono">{error.digest}</span>
+        </p>
+      ) : null}
+
       {process.env.NODE_ENV === "development" && (
         <pre className="w-full overflow-auto rounded-lg bg-neutral-100 p-4 text-xs">
           {error.message}
