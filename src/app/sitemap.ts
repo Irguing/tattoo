@@ -1,19 +1,10 @@
 import type { MetadataRoute } from "next";
-import { prisma } from "@/lib/prisma";
+import { getAllPosts } from "@/lib/blog";
 import { absUrl } from "@/lib/seo/site";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 3600; // 1h (ajusta a gusto)
+export const revalidate = 3600;
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await prisma.post
-    .findMany({
-      where: { isPublished: true },
-      select: { slug: true, updatedAt: true, createdAt: true },
-      orderBy: { createdAt: "desc" },
-    })
-    .catch(() => []);
-
+export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: absUrl("/"),
@@ -41,12 +32,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const postRoutes: MetadataRoute.Sitemap = posts.map((p) => ({
-    url: absUrl(`/blog/${p.slug}`),
-    lastModified: p.updatedAt ?? p.createdAt,
+  const markdownPostRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+    url: absUrl(`/blog/${post.slug}`),
+    lastModified: new Date(post.frontmatter.date ?? Date.now()),
     changeFrequency: "monthly",
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...postRoutes];
+  return [...staticRoutes, ...markdownPostRoutes];
 }
