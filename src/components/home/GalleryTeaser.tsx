@@ -32,7 +32,7 @@ export async function GalleryTeaser() {
       url: true,
       tags: true,
     },
-  });
+  }).catch(() => []);
 
   // ✅ Normalización segura aquí
   const images: TeaserImage[] = rawImages.map((img) => ({

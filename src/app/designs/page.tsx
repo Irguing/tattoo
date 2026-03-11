@@ -27,29 +27,30 @@ export default async function Page({
   const activeTag = (searchParams?.tag ?? "").trim();
   const q = (searchParams?.q ?? "").trim();
 
-  const rows = await prisma.galleryImage.findMany({
-    where: {
-      isPublished: true,
-      AND: [
-        activeTag ? { tags: { contains: activeTag } } : {},
-        q
-          ? {
-              OR: [{ title: { contains: q } }, { tags: { contains: q } }],
-            }
-          : {},
-      ],
-    },
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      title: true,
-      alt: true,
-      url: true,
-      tags: true,
-    },
-  });
+  const rows = await prisma.galleryImage
+    .findMany({
+      where: {
+        isPublished: true,
+        AND: [
+          activeTag ? { tags: { contains: activeTag } } : {},
+          q
+            ? {
+                OR: [{ title: { contains: q } }, { tags: { contains: q } }],
+              }
+            : {},
+        ],
+      },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        alt: true,
+        url: true,
+        tags: true,
+      },
+    })
+    .catch(() => []);
 
-  // ✅ normalizamos null → string para cumplir ImageItem
   const images: ImageItem[] = rows.map((img) => ({
     id: img.id,
     title: img.title ?? "",
@@ -58,11 +59,12 @@ export default async function Page({
     tags: img.tags,
   }));
 
-  // tags list (solo publicados)
-  const all = await prisma.galleryImage.findMany({
-    where: { isPublished: true },
-    select: { tags: true },
-  });
+  const all = await prisma.galleryImage
+    .findMany({
+      where: { isPublished: true },
+      select: { tags: true },
+    })
+    .catch(() => []);
 
   const tagSet = new Set<string>();
   for (const row of all) {

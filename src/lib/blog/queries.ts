@@ -23,30 +23,10 @@ function buildPostWhere(params: {
 
   if (q) {
     where.OR = [
-      {
-        title: {
-          contains: q,
-          mode: "insensitive",
-        },
-      },
-      {
-        excerpt: {
-          contains: q,
-          mode: "insensitive",
-        },
-      },
-      {
-        content: {
-          contains: q,
-          mode: "insensitive",
-        },
-      },
-      {
-        tags: {
-          contains: q,
-          mode: "insensitive",
-        },
-      },
+      { title: { contains: q, mode: "insensitive" } },
+      { excerpt: { contains: q, mode: "insensitive" } },
+      { content: { contains: q, mode: "insensitive" } },
+      { tags: { contains: q, mode: "insensitive" } },
     ];
   }
 
@@ -66,35 +46,34 @@ export async function getPublishedPostsPage(input: {
     tag: input.tag,
   });
 
-  const posts = await prisma.post.findMany({
-    where,
-    orderBy: [
-      { createdAt: "desc" },
-      { id: "desc" },
-    ],
-    take: take + 1,
-    ...(input.cursor
-      ? {
-          cursor: { id: input.cursor },
-          skip: 1,
-        }
-      : {}),
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      excerpt: true,
-      coverUrl: true,
-      tags: true,
-      createdAt: true,
-    },
-  });
+  try {
+    const posts = await prisma.post.findMany({
+      where,
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: take + 1,
+      ...(input.cursor
+        ? {
+            cursor: { id: input.cursor },
+            skip: 1,
+          }
+        : {}),
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        excerpt: true,
+        coverUrl: true,
+        tags: true,
+        createdAt: true,
+      },
+    });
 
-  const hasMore = posts.length > take;
-  const items = hasMore ? posts.slice(0, take) : posts;
-  const nextCursor = hasMore
-    ? items[items.length - 1]?.id ?? null
-    : null;
+    const hasMore = posts.length > take;
+    const items = hasMore ? posts.slice(0, take) : posts;
+    const nextCursor = hasMore ? items[items.length - 1]?.id ?? null : null;
 
-  return { items, nextCursor };
+    return { items, nextCursor };
+  } catch {
+    return { items: [], nextCursor: null };
+  }
 }

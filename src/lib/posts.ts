@@ -47,27 +47,33 @@ function normalizeTags(input: FileBlogPost["frontmatter"]["tags"]): string[] {
 }
 
 async function hasDbPosts() {
-  const count = await prisma.post.count();
-  return count > 0;
+  try {
+    const count = await prisma.post.count();
+    return count > 0;
+  } catch {
+    return false;
+  }
 }
 
 export async function getAllPostsUnified(): Promise<UnifiedPost[]> {
   if (await hasDbPosts()) {
-    const rows = await prisma.post.findMany({
-      where: { isPublished: true },
-      orderBy: { createdAt: "desc" },
-      select: {
-        slug: true,
-        title: true,
-        excerpt: true,
-        content: true,
-        coverUrl: true,
-        tags: true,
-        isPublished: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const rows = await prisma.post
+      .findMany({
+        where: { isPublished: true },
+        orderBy: { createdAt: "desc" },
+        select: {
+          slug: true,
+          title: true,
+          excerpt: true,
+          content: true,
+          coverUrl: true,
+          tags: true,
+          isPublished: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      })
+      .catch(() => []);
 
     return rows.map((p: (typeof rows)[number]) => ({
 
@@ -112,20 +118,22 @@ export async function getAllPostsUnified(): Promise<UnifiedPost[]> {
 
 export async function getPostBySlugUnified(slug: string): Promise<UnifiedPost | null> {
   if (await hasDbPosts()) {
-    const p = await prisma.post.findFirst({
-      where: { slug, isPublished: true },
-      select: {
-        slug: true,
-        title: true,
-        excerpt: true,
-        content: true,
-        coverUrl: true,
-        tags: true,
-        isPublished: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const p = await prisma.post
+      .findFirst({
+        where: { slug, isPublished: true },
+        select: {
+          slug: true,
+          title: true,
+          excerpt: true,
+          content: true,
+          coverUrl: true,
+          tags: true,
+          isPublished: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      })
+      .catch(() => null);
 
     if (!p) return null;
 

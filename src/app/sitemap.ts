@@ -1,16 +1,16 @@
 import type { MetadataRoute } from "next";
-import { prisma } from "@/lib/prisma";
+import { getAllPosts } from "@/lib/blog";
 import { absUrl } from "@/lib/seo/site";
 
-export const revalidate = 3600; // 1h (ajusta a gusto)
+export const revalidate = 3600;
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await prisma.post.findMany({
-    where: { isPublished: true },
-    select: { slug: true, updatedAt: true, createdAt: true },
-    orderBy: { createdAt: "desc" },
-  });
+function safeDate(value?: string): Date {
+  if (!value) return new Date();
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+}
 
+export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: absUrl("/"),
@@ -31,19 +31,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: absUrl("/bookings"),
+      url: absUrl("/book"),
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
     },
   ];
 
-  const postRoutes: MetadataRoute.Sitemap = posts.map((p) => ({
-    url: absUrl(`/blog/${p.slug}`),
-    lastModified: p.updatedAt ?? p.createdAt,
+  const markdownPostRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+    url: absUrl(`/blog/${post.slug}`),
+    lastModified: safeDate(post.frontmatter.date),
     changeFrequency: "monthly",
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...postRoutes];
+  return [...staticRoutes, ...markdownPostRoutes];
 }
