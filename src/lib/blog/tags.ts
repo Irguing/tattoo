@@ -22,15 +22,18 @@ function uniqueLowerPreserve(tags: string[]): string[] {
 }
 
 export async function getPublishedTags(limit = 24): Promise<string[]> {
-  const rows = await prisma.post.findMany({
-    where: { isPublished: true, tags: { not: null } },
-    select: { tags: true },
-    orderBy: { createdAt: "desc" },
-  });
+  try {
+    const rows = await prisma.post.findMany({
+      where: { isPublished: true, tags: { not: null } },
+      select: { tags: true },
+      orderBy: { createdAt: "desc" },
+    });
 
-  const all = rows.flatMap((r) => parseTags(r.tags));
-  const uniq = uniqueLowerPreserve(all);
+    const all = rows.flatMap((r) => parseTags(r.tags));
+    const uniq = uniqueLowerPreserve(all);
 
-  return uniq.slice(0, limit);
+    return uniq.slice(0, limit);
+  } catch {
+    return [];
+  }
 }
-    

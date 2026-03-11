@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Image from "next/image";
-import { prisma } from "@/lib/prisma";
 import Markdown from "@/components/markdown/Markdown";
 import { absUrl } from "@/lib/seo/site";
+import { getPostBySlugUnified } from "@/lib/posts";
 
-// ✅ IMPORTANTE: params es Promise en tu setup (sync dynamic APIs)
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// ✅ SEO dinámico + Canonical + OpenGraph + Robots correctos + SIN drafts
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
 
@@ -22,37 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  // Selección mínima para metadata
-  const bySlug = await prisma.post.findUnique({
-    where: { slug },
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      excerpt: true,
-      coverUrl: true,
-      isPublished: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
-
-  // Compat: si el link viejo usa id, intentamos por id (sin revelar drafts)
-  const post =
-    bySlug ??
-    (await prisma.post.findUnique({
-      where: { id: slug },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        excerpt: true,
-        coverUrl: true,
-        isPublished: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    }));
+  const post = await getPostBySlugUnified(slug);
 
   if (!post || !post.isPublished) {
     return {
@@ -66,13 +34,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = `${post.title} | Miko Jester`;
   const description = post.excerpt ?? "Editorial";
   const image = post.coverUrl ? absUrl(post.coverUrl) : absUrl("/og-default.jpg");
+  const updatedAt = post.updatedAt ?? post.createdAt;
 
   return {
     title,
     description,
-    alternates: {
-      canonical,
-    },
+    alternates: { canonical },
     openGraph: {
       type: "article",
       url: canonical,
@@ -80,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [{ url: image }],
       publishedTime: post.createdAt.toISOString(),
-      modifiedTime: post.updatedAt.toISOString(),
+      modifiedTime: updatedAt.toISOString(),
     },
     twitter: {
       card: "summary_large_image",
@@ -93,59 +60,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-  const { slug: param } = await params;
+  const { slug } = await params;
+  if (!slug) return notFound();
 
-  if (!param) return notFound();
+  const post = await getPostBySlugUnified(slug);
+  if (!post || !post.isPublished) return notFound();
 
-  // 1) Primero por slug
-  const bySlug = await prisma.post.findUnique({
-    where: { slug: param },
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      excerpt: true,
-      content: true,
-      coverUrl: true,
-      tags: true,
-      isPublished: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
-
-  // 2) Compat: si el link viejo usa id
-  const post =
-    bySlug ??
-    (await prisma.post.findUnique({
-      where: { id: param },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        excerpt: true,
-        content: true,
-        coverUrl: true,
-        tags: true,
-        isPublished: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    }));
-
-  if (!post) return notFound();
-
-  // Canonical: si entraron por id -> redirige al slug real
-  if (param === post.id) {
-    redirect(`/blog/${post.slug}`);
-  }
-
-  // Front solo publicados
-  if (!post.isPublished) return notFound();
-
-  // ✅ JSON-LD (Structured Data)
   const url = absUrl(`/blog/${post.slug}`);
   const image = post.coverUrl ? absUrl(post.coverUrl) : absUrl("/og-default.jpg");
+  const updatedAt = post.updatedAt ?? post.createdAt;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -153,7 +76,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     headline: post.title,
     description: post.excerpt ?? undefined,
     datePublished: post.createdAt.toISOString(),
-    dateModified: post.updatedAt.toISOString(),
+    dateModified: updatedAt.toISOString(),
     mainEntityOfPage: url,
     url,
     image: [image],
@@ -178,7 +101,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <h1 className="text-4xl font-semibold tracking-tight">{post.title}</h1>
         {post.excerpt && <p className="text-neutral-600 leading-7">{post.excerpt}</p>}
         <div className="text-sm text-neutral-500">
-          Actualizado: {new Date(post.updatedAt).toLocaleDateString("es-ES")}
+          Actualizado: {updatedAt.toLocaleDateString("es-ES")}
         </div>
       </header>
 
