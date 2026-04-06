@@ -1,8 +1,9 @@
+
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { absUrl } from "@/lib/seo/site";
 
-export const revalidate = 3600; // 1h (ajusta a gusto)
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await prisma.post.findMany({
