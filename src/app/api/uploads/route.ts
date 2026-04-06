@@ -1,7 +1,7 @@
+import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "node:fs/promises";
-import path from "node:path";
 import crypto from "node:crypto";
+import path from "node:path";
 
 export const runtime = "nodejs";
 
@@ -13,17 +13,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Archivo inválido." }, { status: 400 });
   }
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  const uploadsDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadsDir, { recursive: true });
-
   const ext = path.extname(file.name) || ".bin";
-  const safeName = `${Date.now()}-${crypto.randomUUID()}${ext}`;
-  const filePath = path.join(uploadsDir, safeName);
+  const filename = `${Date.now()}-${crypto.randomUUID()}${ext}`;
 
-  await writeFile(filePath, buffer);
+  const blob = await put(filename, file, { access: "public" });
 
-  return NextResponse.json({ url: `/uploads/${safeName}` });
+  return NextResponse.json({ url: blob.url });
 }

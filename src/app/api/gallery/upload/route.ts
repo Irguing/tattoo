@@ -1,6 +1,6 @@
+import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
-import path from "path";
-import { promises as fs } from "fs";
+import path from "node:path";
 
 export const runtime = "nodejs";
 
@@ -21,24 +21,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing file" }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await fs.mkdir(uploadsDir, { recursive: true });
-
     const filename = safeName(file.name);
-    const filepath = path.join(uploadsDir, filename);
-
-    await fs.writeFile(filepath, buffer);
+    const blob = await put(filename, file, { access: "public" });
 
     return NextResponse.json({
-      url: `/uploads/${filename}`,
+      url: blob.url,
       filename,
       mime: file.type || "application/octet-stream",
-      size: buffer.length,
+      size: file.size,
     });
-  } catch  {
+  } catch {
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 }
