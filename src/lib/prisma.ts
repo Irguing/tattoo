@@ -1,14 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import { neonConfig } from "@neondatabase/serverless";
-
-if (typeof WebSocket === "undefined") {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  neonConfig.webSocketConstructor = require("ws");
-}
+import { PrismaNeonHTTP } from "@prisma/adapter-neon";
+import { neon } from "@neondatabase/serverless";
 
 function createPrismaClient() {
-  const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
+  const sql = neon(process.env.DATABASE_URL!);
+  const adapter = new PrismaNeonHTTP(sql);
   return new PrismaClient({ adapter, log: ["error", "warn"] });
 }
 
