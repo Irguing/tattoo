@@ -43,5 +43,5 @@ next-env.d.ts
 /generated/prisma
 
 /prisma/migrations/.DS_Store
-/public/uploads
+# /public/uploads — tracked in git; new uploads go to Vercel Blob
 

@@ -1,0 +1,6 @@
+# Prisma / DB
+dev.db
+dev.db-journal
+
+# Uploads (dev)
+public/uploads/
