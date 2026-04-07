@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { env } from "@/lib/env";
 
 type LineItem = { productId: string; quantity: number };
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
 
     const origin = env.SITE_URL;
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       mode: "payment",
       line_items: lineItems,
       success_url: `${origin}/merch/success?session_id={CHECKOUT_SESSION_ID}`,
