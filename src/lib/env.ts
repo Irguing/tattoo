@@ -4,15 +4,10 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
   DIRECT_URL: z.string().min(1),
   BLOB_READ_WRITE_TOKEN: z.string().min(1),
-  STRIPE_SECRET_KEY: z.string().startsWith("sk_", {
-    message: "STRIPE_SECRET_KEY must start with 'sk_'",
-  }),
-  STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_", {
-    message: "STRIPE_WEBHOOK_SECRET must start with 'whsec_'",
-  }),
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().startsWith("pk_", {
-    message: "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY must start with 'pk_'",
-  }),
+  // Stripe — opcionales hasta configurar cuenta
+  STRIPE_SECRET_KEY: z.string().startsWith("sk_").optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_").optional(),
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().startsWith("pk_").optional(),
   SESSION_COOKIE_NAME: z.string().optional().default("admin_session"),
   SITE_URL: z.string().optional().default("http://localhost:3000"),
 });
