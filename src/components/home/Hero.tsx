@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import SiteHeader from "../SiteHeader";
 const HERO_BG = "/images/hero-bg.jpg";
 
 
@@ -22,8 +21,7 @@ export function Hero() {
       <Decorations />
 
 
-<SiteHeader />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 md:grid-cols-2">
+<div className="relative mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 md:grid-cols-2">
         <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-sand/20 bg-sand/10 px-3 py-1 text-xs font-semibold">
             ✦ Ilustración · Tattoo Artist · Estudio Privado

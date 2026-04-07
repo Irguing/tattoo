@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getCurrentAdmin } from "./getCurrentAdmin";
+import { getCurrentAdmin } from "@/lib/auth";
 
 export async function mustBeAdmin() {
   const admin = await getCurrentAdmin();

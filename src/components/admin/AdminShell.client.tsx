@@ -10,6 +10,7 @@ const NAV: NavItem[] = [
   { href: "/admin/bookings", label: "Bookings", desc: "Reservas y estados" },
   { href: "/admin/posts", label: "Posts", desc: "Blog editorial" },
   { href: "/admin/gallery", label: "Gallery", desc: "Imágenes y metadata" },
+  { href: "/admin/merch", label: "Merch", desc: "Productos y stock" },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -96,6 +97,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                     ? "Posts"
                     : pathname.startsWith("/admin/gallery")
                     ? "Gallery"
+                    : pathname.startsWith("/admin/merch")
+                    ? "Merch"
                     : "Panel"}
                 </div>
               </div>
@@ -109,6 +112,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 </Link>
                 <Link href="/admin/gallery" className="rounded-xl border px-3 py-2 text-xs font-medium hover:bg-gray-50">
                   Gallery
+                </Link>
+                <Link href="/admin/merch" className="rounded-xl border px-3 py-2 text-xs font-medium hover:bg-gray-50">
+                  Merch
                 </Link>
               </div>
             </div>

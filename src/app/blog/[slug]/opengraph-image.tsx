@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { getPostBySlugUnified } from "@/lib/posts";
+import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 export const size = { width: 1200, height: 630 };
@@ -11,7 +11,10 @@ export default async function OG({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlugUnified(slug);
+  const post = await prisma.post.findUnique({
+    where: { slug, isPublished: true },
+    select: { title: true },
+  });
 
   const title = post?.title ?? "Miko Jester Blog";
 

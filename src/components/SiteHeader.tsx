@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { CartShell } from "./CartShell.client";
 
 export default function SiteHeader() {
   return (
@@ -33,6 +34,7 @@ export default function SiteHeader() {
         >
           Reservar
         </Link>
+        <CartShell />
       </nav>
     </header>
   );

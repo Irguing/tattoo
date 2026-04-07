@@ -57,6 +57,51 @@ model Booking {
   @@index([createdAt])
 }
 
+model Product {
+  id            String      @id @default(cuid())
+  slug          String      @unique
+  name          String
+  description   String?
+  price         Int
+  imageUrl      String?
+  imageFilename String?
+  category      String      @default("general")
+  stock         Int         @default(0)
+  isPublished   Boolean     @default(false)
+  orderItems    OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([isPublished, createdAt])
+  @@index([category])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  stripeSessionId String      @unique
+  customerEmail   String
+  status          String      @default("pending")
+  totalCents      Int
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+
+  @@index([stripeSessionId])
+  @@index([customerEmail])
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  productId  String
+  quantity   Int
+  priceCents Int
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
 model AdminUser {
   id        String    @id @default(cuid())
   email     String    @unique

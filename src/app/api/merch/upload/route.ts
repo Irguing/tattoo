@@ -10,7 +10,7 @@ function safeName(original: string) {
   const ext = path.extname(base);
   const name = path.basename(base, ext);
   const stamp = Date.now().toString(36);
-  return `${name}-${stamp}${ext || ""}`.toLowerCase();
+  return `merch/${name}-${stamp}${ext || ""}`.toLowerCase();
 }
 
 export async function POST(req: Request) {

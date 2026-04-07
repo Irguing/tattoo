@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getCurrentAdmin } from "@/lib/auth/getCurrentAdmin";
+import { getCurrentAdmin } from "@/lib/auth";
 
 async function mustBeAdmin() {
   const admin = await getCurrentAdmin();

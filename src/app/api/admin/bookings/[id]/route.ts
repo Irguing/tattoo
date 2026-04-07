@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin, isUnauthorized } from "@/lib/api-auth";
 
 const ALLOWED = new Set(["pending", "confirmed", "rejected"]);
 
@@ -7,6 +8,9 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin();
+  if (isUnauthorized(auth)) return auth;
+
   try {
     const { id } = await params;
 
