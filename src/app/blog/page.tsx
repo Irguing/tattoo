@@ -50,13 +50,13 @@ export default async function BlogPage({ searchParams }: Props) {
 
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
+    <main className="bg-sand mx-auto max-w-6xl px-4 py-10">
       <header className="mb-10">
-        <p className="text-sm text-neutral-500">Editorial</p>
-        <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
+        <p className="text-sm text-ink/50">Editorial</p>
+        <h1 className="mt-2 font-display text-5xl tracking-wide text-green900">
           Blog
         </h1>
-        <p className="mt-3 max-w-2xl text-neutral-600">
+        <p className="mt-3 max-w-2xl text-ink/70">
           Ideas, flashes y procesos. Filtra por tags o busca por palabras clave.
         </p>
       </header>

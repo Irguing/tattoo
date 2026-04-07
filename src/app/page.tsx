@@ -1,4 +1,3 @@
-// src/app/page.tsx
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 import Link from "next/link";
@@ -6,9 +5,6 @@ import { Hero } from "@/components/home/Hero";
 import { About } from "@/components/home/About";
 import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { CTA } from "@/components/home/CTA";
-import { Footer } from "@/components/layout/Footer";
-
-import BlogTeaser from "@/components/blog/BlogTeaser"; // ✅ recomendado (ver nota abajo)
 
 export default function Home() {
   return (
@@ -16,10 +12,7 @@ export default function Home() {
       <Hero />
       <About />
 
-      {/* ✅ Teaser del Blog */}
-      <BlogTeaser />
-
-      {/* Tu sección “¿Qué quieres hacer?” */}
+      {/* ¿Qué quieres hacer? */}
       <section className="bg-sand py-14">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="font-display text-4xl tracking-wide text-green900">¿Qué quieres hacer?</h2>
@@ -52,7 +45,6 @@ export default function Home() {
 
       <GalleryTeaser />
       <CTA />
-      <Footer />
     </>
   );
 }
