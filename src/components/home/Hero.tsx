@@ -1,137 +1,175 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+
 const HERO_BG = "/images/hero-bg.jpg";
 
+const MARQUEE_ITEMS = [
+  "NEW SCHOOL",
+  "✦",
+  "BLACKWORK",
+  "✦",
+  "REALISMO",
+  "✦",
+  "ILUSTRACIÓN",
+  "✦",
+  "MADRID",
+  "✦",
+  "ESTUDIO PRIVADO",
+  "✦",
+  "MERCH",
+  "✦",
+  "COLOR",
+  "✦",
+  "ANIME",
+  "✦",
+];
 
 export function Hero() {
   return (
-<section className="relative overflow-hidden text-sand">
-  {/* Imagen de fondo */}
-  <div
-    className="absolute inset-0 bg-cover bg-center"
-    style={{ backgroundImage: `url(${HERO_BG})` }}
-  />
+    <section className="relative min-h-screen overflow-hidden flex flex-col">
+      {/* ── Fondo ── */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${HERO_BG})` }}
+      />
+      {/* Gradient overlay — oscuro arriba y abajo para legibilidad */}
+      <div className="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/40 to-dark/90" />
+      {/* Viñeta lateral */}
+      <div className="absolute inset-0 bg-gradient-to-r from-dark/60 via-transparent to-dark/40" />
 
-  {/* Overlay/gradiente para legibilidad */}
-  <div className="absolute inset-0 bg-gradient-to-b from-green900/60 via-green900/35 to-green900/65" />
-      {/* textura/ruido simple */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" />
+      {/* ── Decoraciones flotantes ── */}
+      <FloatingSparkles />
 
-      {/* decoraciones tipo “estrellas” */}
-      <Decorations />
+      {/* ── Blur spots de color ── */}
+      <div className="pointer-events-none absolute top-20 right-16 h-72 w-72 rounded-full bg-neon/15 blur-[80px]" />
+      <div className="pointer-events-none absolute bottom-32 left-10 h-64 w-64 rounded-full bg-purple/15 blur-[80px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/3 h-48 w-48 rounded-full bg-gold/10 blur-[60px]" />
 
+      {/* ── Contenido principal ── */}
+      <div className="relative flex flex-1 items-center">
+        <div className="mx-auto w-full max-w-6xl px-6 pt-28 pb-12">
+          <div className="max-w-3xl">
+            {/* Badge */}
+            <div className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-neon/30 bg-neon/8 px-4 py-1.5 text-xs font-bold tracking-widest text-neon">
+              <span className="h-1.5 w-1.5 rounded-full bg-neon animate-pulse" />
+              ESTUDIO PRIVADO · MADRID · CENTRO
+            </div>
 
-<div className="relative mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 md:grid-cols-2">
-        <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-sand/20 bg-sand/10 px-3 py-1 text-xs font-semibold">
-            ✦ Ilustración · Tattoo Artist · Estudio Privado
+            {/* Heading */}
+            <h1 className="animate-fade-up delay-100 mt-5 font-display leading-[0.85] tracking-wide">
+              <span className="block text-7xl text-cream drop-shadow-lg md:text-8xl lg:text-9xl">
+                MIKO
+              </span>
+              <span className="block text-7xl text-cream drop-shadow-lg md:text-8xl lg:text-9xl">
+                JESTER
+              </span>
+              <span className="text-shimmer block text-6xl md:text-7xl lg:text-8xl">
+                TATTOO STUDIO
+              </span>
+            </h1>
 
-          </p>
-
-          <h1 className="mt-5 font-display text-6xl leading-[0.9] tracking-wide md:text-7xl">
-            Miko Jester
-            <span className="block text-neon">Tattoo Studio</span>
-          </h1>
-
-          <p className="mt-5 max-w-xl text-base text-sand/80 md:text-lg">
-            Diseños con vibra ilustrada, flash con personalidad y una tienda de merch que
-            vamos a convertir en un proyecto fullstack de entrevista.
-          </p>
-
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/book">
-              <Button className="bg-neon text-ink hover:opacity-90">
-                Reservar cita
-              </Button>
-            </Link>
-            <Link href="/designs">
-              <Button variant="outline" className="border-sand/30 bg-transparent text-sand hover:bg-sand/10">
-                Ver tatuajes
-              </Button>
-            </Link>
-            <Link href="/merch">
-              <Button variant="ghost" className="text-sand hover:bg-sand/10">
-                Ir a la tienda
-              </Button>
-            </Link>
-          </div>
-
-          <div className="mt-8 grid grid-cols-2 gap-4 text-xs text-sand/75 max-w-sm">
-  <Stat title="Flash disponibles" value="+120" />
-  <Stat title="Reservas" value="Online" />
-</div>
-
-        </div>
-
-        {/* bloque “ilustración” (placeholder) */}
-        <div className="relative">
-        <div className="aspect-[4/5] w-full rounded-[28px] border border-sand/20 bg-gradient-to-br from-sand/10 to-transparent shadow-soft backdrop-blur-xl" />
-          <div className="pointer-events-none absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-neon/25 blur-2xl" />
-          <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-rust/25 blur-2xl" />
-
-          <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-sand/15 bg-sand/10 p-4 backdrop-blur">
-            <p className="font-display text-2xl tracking-wide">ESTUDIO PRIVADO</p>
-            <p className="mt-1 text-sm text-sand/75">
-               Tattoo studio en el centro de Madrid, pensado como un espacio íntimo,
-    tranquilo y personalizado donde cada pieza nace desde la ilustración.
+            {/* Subtitle */}
+            <p className="animate-fade-up delay-200 mt-6 max-w-lg text-base text-cream/65 leading-relaxed md:text-lg">
+              Tinta llena de vida, ilustrada con personalidad y un ambiente vibrante
+              donde tus ideas se convierten en obras de arte.
             </p>
+
+            {/* CTAs */}
+            <div className="animate-fade-up delay-300 mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/book"
+                className="group relative rounded-full border-2 border-neon bg-neon px-7 py-3.5 text-sm font-bold tracking-widest text-dark shadow-neon transition-all hover:bg-transparent hover:text-neon hover:shadow-[0_0_40px_rgba(76,194,29,0.5)]"
+              >
+                RESERVAR CITA
+              </Link>
+              <Link
+                href="/designs"
+                className="rounded-full border-2 border-cream/20 bg-cream/5 px-7 py-3.5 text-sm font-bold tracking-widest text-cream backdrop-blur transition-all hover:border-cream/50 hover:bg-cream/10"
+              >
+                VER TRABAJOS →
+              </Link>
+            </div>
+
+            {/* Stats */}
+            <div className="animate-fade-up delay-500 mt-10 flex flex-wrap gap-4">
+              <StatPill value="+120" label="Flash disponibles" />
+              <StatPill value="100%" label="Custom design" />
+              <StatPill value="Online" label="Reservas" />
+            </div>
           </div>
+        </div>
+      </div>
+
+      {/* ── Marquee strip ── */}
+      <div className="relative border-t border-cream/10 bg-dark/60 backdrop-blur-sm py-3 overflow-hidden">
+        <div className="flex w-max animate-marquee gap-8 whitespace-nowrap">
+          {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+            <span
+              key={i}
+              className={
+                item === "✦"
+                  ? "text-neon text-lg"
+                  : "text-xs font-bold tracking-[0.3em] text-cream/40"
+              }
+            >
+              {item}
+            </span>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function Stat({ title, value }: { title: string; value: string }) {
+function StatPill({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-xl border border-sand/15 bg-sand/5 p-3">
-      <div className="font-display text-xl tracking-wide">{value}</div>
-      <div className="mt-1">{title}</div>
+    <div className="flex items-center gap-3 rounded-2xl border border-cream/10 bg-surface/60 px-4 py-2.5 backdrop-blur-sm">
+      <span className="font-display text-2xl text-neon tracking-wide">{value}</span>
+      <span className="text-xs text-cream/50 leading-tight">{label}</span>
     </div>
   );
 }
 
-function Decorations() {
-  return (
-    <svg
-      className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
-      viewBox="0 0 1200 600"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* estrellas simples */}
-      <g opacity="0.35">
-        <Star x={120} y={90} s={16} />
-        <Star x={280} y={140} s={10} />
-        <Star x={980} y={120} s={18} />
-        <Star x={1040} y={230} s={10} />
-        <Star x={160} y={420} s={12} />
-        <Star x={920} y={460} s={14} />
-      </g>
+function FloatingSparkles() {
+  const sparkles = [
+    { x: "8%",  y: "18%", size: 18, delay: "0s",    dur: "5s"  },
+    { x: "18%", y: "72%", size: 12, delay: "1.2s",  dur: "6s"  },
+    { x: "80%", y: "14%", size: 22, delay: "0.4s",  dur: "4.5s"},
+    { x: "88%", y: "60%", size: 14, delay: "2s",    dur: "7s"  },
+    { x: "55%", y: "80%", size: 10, delay: "0.8s",  dur: "5.5s"},
+    { x: "42%", y: "10%", size: 16, delay: "1.6s",  dur: "6.5s"},
+    { x: "92%", y: "35%", size: 10, delay: "3s",    dur: "5s"  },
+  ];
 
-      {/* líneas curvas suaves */}
-      <path
-        d="M-50 200 C 250 120, 360 260, 620 180 C 860 110, 980 160, 1250 90"
-        stroke="rgba(243,235,221,0.18)"
-        strokeWidth="2"
-      />
-      <path
-        d="M-40 520 C 260 420, 420 560, 680 480 C 920 410, 1030 500, 1260 420"
-        stroke="rgba(243,235,221,0.14)"
-        strokeWidth="2"
-      />
-    </svg>
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {sparkles.map((s, i) => (
+        <div
+          key={i}
+          className="absolute"
+          style={{
+            left: s.x,
+            top: s.y,
+            animation: `float ${s.dur} ease-in-out infinite`,
+            animationDelay: s.delay,
+          }}
+        >
+          <Star size={s.size} />
+        </div>
+      ))}
+    </div>
   );
 }
 
-function Star({ x, y, s }: { x: number; y: number; s: number }) {
-  const r = s / 2;
+function Star({ size }: { size: number }) {
+  const r = size / 2;
+  const x = r;
+  const y = r;
   return (
-    <path
-      d={`M ${x} ${y - r} L ${x + r * 0.35} ${y - r * 0.35} L ${x + r} ${y} L ${x + r * 0.35} ${y + r * 0.35} L ${x} ${
-        y + r
-      } L ${x - r * 0.35} ${y + r * 0.35} L ${x - r} ${y} L ${x - r * 0.35} ${y - r * 0.35} Z`}
-      fill="rgba(243,235,221,0.22)"
-    />
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+      <path
+        d={`M ${x} 0 L ${x + r * 0.35} ${y - r * 0.35} L ${size} ${y} L ${x + r * 0.35} ${y + r * 0.35} L ${x} ${size} L ${x - r * 0.35} ${y + r * 0.35} L 0 ${y} L ${x - r * 0.35} ${y - r * 0.35} Z`}
+        fill="rgba(232,160,32,0.35)"
+      />
+    </svg>
   );
 }
