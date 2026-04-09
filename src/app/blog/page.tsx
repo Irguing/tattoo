@@ -3,7 +3,6 @@ import BlogFeedClient from "@/components/blog/BlogFeed.client";
 import { getPublishedPostsPage } from "@/lib/blog/queries";
 import { getPublishedTags } from "@/lib/blog/tags";
 
-
 export const metadata: Metadata = {
   title: "Blog | Miko Jester",
   description: "Editorial: flashes, procesos y piezas destacadas.",
@@ -35,7 +34,6 @@ export default async function BlogPage({ searchParams }: Props) {
 
   const page = await getPublishedPostsPage({ q, tag, cursor });
 
-  // ✅ Serializamos Date -> string (props client-safe)
   const initialItems = page.items.map((p) => ({
     id: p.id,
     slug: p.slug,
@@ -48,28 +46,32 @@ export default async function BlogPage({ searchParams }: Props) {
 
   const allTags = await getPublishedTags(24);
 
-
   return (
-    <main className="bg-sand mx-auto max-w-6xl px-4 py-10">
-      <header className="mb-10">
-        <p className="text-sm text-ink/50">Editorial</p>
-        <h1 className="mt-2 font-display text-5xl tracking-wide text-green900">
-          Blog
-        </h1>
-        <p className="mt-3 max-w-2xl text-ink/70">
-          Ideas, flashes y procesos. Filtra por tags o busca por palabras clave.
-        </p>
-      </header>
+    <main className="relative overflow-hidden bg-bg min-h-screen pt-28 pb-20">
+      <div className="halftone absolute inset-0 opacity-40" />
+      <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full bg-neon/8 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 rounded-full bg-gold/6 blur-[80px]" />
 
-     <BlogFeedClient
-  key={`blog:${q}|${tag}`}
-  initialItems={initialItems}
-  initialNextCursor={page.nextCursor}
-  initialQuery={{ q, tag }}
-  allTags={allTags}
-/>
+      <div className="relative mx-auto max-w-6xl px-6">
+        <div className="mb-10">
+          <span className="inline-flex items-center gap-2 rounded-full border border-neon/25 bg-neon/8 px-4 py-1.5">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-neon" />
+            <span className="text-xs font-bold tracking-[0.25em] text-neon">EDITORIAL · PROCESOS · FLASHES</span>
+          </span>
+          <h1 className="mt-4 font-display text-6xl tracking-wide text-gold md:text-7xl">BLOG</h1>
+          <p className="mt-2 max-w-xl text-sm text-cream/50">
+            Ideas, flashes y procesos. Filtra por tags o busca por palabras clave.
+          </p>
+        </div>
 
-
+        <BlogFeedClient
+          key={`blog:${q}|${tag}`}
+          initialItems={initialItems}
+          initialNextCursor={page.nextCursor}
+          initialQuery={{ q, tag }}
+          allTags={allTags}
+        />
+      </div>
     </main>
   );
 }

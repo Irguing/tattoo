@@ -20,13 +20,11 @@ export default function BookPage() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     setLoading(true);
     setError(null);
     setSuccess(false);
 
     const formData = new FormData(e.currentTarget);
-
     const payload = {
       name: String(formData.get("name") ?? "").trim(),
       email: String(formData.get("email") ?? "").trim(),
@@ -45,12 +43,7 @@ export default function BookPage() {
 
       const text = await res.text();
       let data: unknown = null;
-
-      try {
-        data = text ? JSON.parse(text) : null;
-      } catch {
-        data = null;
-      }
+      try { data = text ? JSON.parse(text) : null; } catch { data = null; }
 
       if (!res.ok) {
         const fallback = `Error ${res.status}: el servidor devolvió una respuesta no-JSON o inválida.`;
@@ -68,50 +61,69 @@ export default function BookPage() {
   }
 
   return (
-    <main className="bg-sand py-16">
-      <div className="mx-auto max-w-3xl px-6">
-        <h1 className="font-display text-5xl tracking-wide text-green900">
-          Reserva tu tattoo
-        </h1>
+    <main className="relative overflow-hidden bg-bg min-h-screen pt-28 pb-20">
+      <div className="halftone absolute inset-0 opacity-40" />
+      <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full bg-neon/8 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 rounded-full bg-gold/6 blur-[80px]" />
 
-        <p className="mt-3 text-ink/70">
-          Cuéntame tu idea y te responderé con disponibilidad y presupuesto.
-        </p>
+      <div className="relative mx-auto max-w-3xl px-6">
+        {/* Header */}
+        <div className="mb-10">
+          <span className="inline-flex items-center gap-2 rounded-full border border-neon/25 bg-neon/8 px-4 py-1.5">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-neon" />
+            <span className="text-xs font-bold tracking-[0.25em] text-neon">RESERVAS · CITAS · CONSULTAS</span>
+          </span>
+          <h1 className="mt-4 font-display text-6xl tracking-wide text-gold md:text-7xl">
+            RESERVÁ
+          </h1>
+          <p className="mt-2 max-w-xl text-sm text-cream/50">
+            Contame tu idea y te respondo con disponibilidad y presupuesto.
+          </p>
+        </div>
 
+        {/* Form */}
         <form
           ref={formRef}
           onSubmit={handleSubmit}
-          className="mt-10 space-y-6 rounded-3xl border border-ink/10 bg-white/50 p-8 shadow-soft"
+          className="panel-card rounded-3xl p-8 space-y-6"
         >
-          <Input label="Nombre" name="name" required />
-          <Input label="Email" name="email" type="email" required />
-          <Textarea label="Idea del tatuaje" name="idea" required />
-          <Input label="Zona del cuerpo" name="placement" />
-          <Input label="Tamaño aproximado" name="size" />
-          <Input label="Presupuesto estimado" name="budget" />
+          <BookInput label="Nombre" name="name" required />
+          <BookInput label="Email" name="email" type="email" required />
+          <BookTextarea label="Idea del tatuaje" name="idea" required />
+          <BookInput label="Zona del cuerpo" name="placement" />
+          <BookInput label="Tamaño aproximado" name="size" />
+          <BookInput label="Presupuesto estimado" name="budget" />
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && (
+            <p className="rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm text-rust">
+              {error}
+            </p>
+          )}
 
           {success && (
-            <p className="text-sm font-semibold text-green700">
-              Solicitud enviada correctamente.
+            <p className="rounded-xl border border-neon/30 bg-neon/10 px-4 py-3 text-sm font-bold text-neon">
+              ✓ Solicitud enviada correctamente. ¡Te contactamos pronto!
             </p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="rounded-full bg-neon px-6 py-3 text-sm font-semibold text-ink shadow-soft hover:opacity-90 disabled:opacity-50"
+            className="w-full rounded-full border-2 border-neon bg-neon px-6 py-4 text-sm font-bold tracking-[0.15em] text-bg shadow-neon transition-all duration-300 hover:bg-transparent hover:text-neon disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Enviando..." : "Enviar solicitud"}
+            {loading ? "ENVIANDO..." : "ENVIAR SOLICITUD →"}
           </button>
+
+          <p className="text-center text-xs text-cream/25">
+            Respondemos en 24–48 h · Sin compromiso
+          </p>
         </form>
       </div>
     </main>
   );
 }
 
-function Input({
+function BookInput({
   label,
   name,
   type = "text",
@@ -124,20 +136,20 @@ function Input({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-ink">
-        {label}
+      <label className="mb-2 block text-xs font-bold tracking-[0.15em] text-cream/60 uppercase">
+        {label}{required && <span className="ml-1 text-neon">*</span>}
       </label>
       <input
         name={name}
         type={type}
         required={required}
-        className="w-full rounded-2xl border border-ink/10 bg-sand px-4 py-3 text-sm outline-none focus:border-green700"
+        className="w-full rounded-2xl border border-cream/10 bg-panel2 px-4 py-3 text-sm text-cream placeholder-cream/25 outline-none transition focus:border-neon/40 focus:ring-0"
       />
     </div>
   );
 }
 
-function Textarea({
+function BookTextarea({
   label,
   name,
   required,
@@ -148,14 +160,14 @@ function Textarea({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-ink">
-        {label}
+      <label className="mb-2 block text-xs font-bold tracking-[0.15em] text-cream/60 uppercase">
+        {label}{required && <span className="ml-1 text-neon">*</span>}
       </label>
       <textarea
         name={name}
         required={required}
-        rows={4}
-        className="w-full rounded-2xl border border-ink/10 bg-sand px-4 py-3 text-sm outline-none focus:border-green700"
+        rows={5}
+        className="w-full rounded-2xl border border-cream/10 bg-panel2 px-4 py-3 text-sm text-cream placeholder-cream/25 outline-none transition focus:border-neon/40 focus:ring-0 resize-none"
       />
     </div>
   );

@@ -169,38 +169,54 @@ export default async function BlogPostPage({ params }: PageProps) {
     },
   } as const;
 
+  const tags = post.tags ? post.tags.split(",").map((t: string) => t.trim()).filter(Boolean) : [];
+
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 space-y-8">
+    <main className="relative overflow-hidden bg-bg min-h-screen pt-28 pb-20">
+      <div className="halftone absolute inset-0 opacity-40" />
+      <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full bg-neon/8 blur-[120px]" />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header className="space-y-3">
-        <h1 className="text-4xl font-semibold tracking-tight">{post.title}</h1>
-        {post.excerpt && <p className="text-neutral-600 leading-7">{post.excerpt}</p>}
-        <div className="text-sm text-neutral-500">
-          Actualizado: {new Date(post.updatedAt).toLocaleDateString("es-ES")}
-        </div>
-      </header>
+      <div className="relative mx-auto max-w-3xl px-6 space-y-8">
+        <header className="space-y-4">
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {tags.map((t: string) => (
+                <span key={t} className="rounded-full border border-neon/30 bg-neon/8 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-neon uppercase">
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+          <h1 className="font-display text-5xl tracking-wide text-gold md:text-6xl">{post.title}</h1>
+          {post.excerpt && <p className="text-cream/55 leading-7">{post.excerpt}</p>}
+          <div className="text-xs text-cream/30">
+            Actualizado: {new Date(post.updatedAt).toLocaleDateString("es-ES")}
+          </div>
+        </header>
 
-      {post.coverUrl && (
-        <div className="relative w-full overflow-hidden rounded-xl border">
-          <div className="pt-[56.25%]" />
-          <Image
-            src={post.coverUrl}
-            alt={post.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 768px"
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
+        {post.coverUrl && (
+          <div className="relative w-full overflow-hidden rounded-2xl comic-border">
+            <div className="pt-[56.25%]" />
+            <Image
+              src={post.coverUrl}
+              alt={post.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 768px"
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
 
-      <article>
-        <Markdown content={post.content} />
-      </article>
+        <article className="panel-card rounded-2xl p-8">
+          <Markdown content={post.content} />
+        </article>
+      </div>
     </main>
   );
 }
