@@ -21,23 +21,27 @@ export default async function MerchPage({
     },
     orderBy: { createdAt: "desc" },
     select: {
-      id: true,
-      slug: true,
-      name: true,
-      price: true,
-      imageUrl: true,
-      category: true,
-      stock: true,
+      id: true, slug: true, name: true, price: true,
+      imageUrl: true, category: true, stock: true,
     },
   });
 
   return (
-    <main className="bg-sand py-14">
-      <div className="mx-auto max-w-6xl px-6">
+    <main className="relative overflow-hidden bg-bg min-h-screen pt-28 pb-20">
+      {/* Halftone + glow */}
+      <div className="halftone absolute inset-0 opacity-40" />
+      <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full bg-neon/8 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 rounded-full bg-gold/6 blur-[80px]" />
+
+      <div className="relative mx-auto max-w-6xl px-6">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="font-display text-5xl tracking-wide text-green900">Tienda</h1>
-          <p className="mt-2 max-w-2xl text-ink/70">
+        <div className="mb-10">
+          <span className="inline-flex items-center gap-2 rounded-full border border-neon/25 bg-neon/8 px-4 py-1.5">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-neon" />
+            <span className="text-xs font-bold tracking-[0.25em] text-neon">TIENDA OFICIAL</span>
+          </span>
+          <h1 className="mt-4 font-display text-6xl tracking-wide text-gold md:text-7xl">TIENDA</h1>
+          <p className="mt-2 max-w-xl text-sm text-cream/50">
             Stickers, prints y más. Envío a toda España.
           </p>
         </div>
@@ -47,23 +51,23 @@ export default async function MerchPage({
           <Link
             href="/merch"
             className={[
-              "rounded-full border px-4 py-1.5 text-sm font-medium transition",
+              "rounded-full border px-4 py-1.5 text-xs font-bold tracking-[0.15em] transition",
               !activeCategory
-                ? "border-green900 bg-green900 text-sand"
-                : "border-ink/20 hover:border-green900 hover:text-green900",
+                ? "border-neon bg-neon/15 text-neon shadow-neon"
+                : "border-cream/15 text-cream/50 hover:border-neon/40 hover:text-neon",
             ].join(" ")}
           >
-            Todo
+            TODO
           </Link>
           {CATEGORIES.map((cat) => (
             <Link
               key={cat}
               href={`/merch?category=${cat}`}
               className={[
-                "rounded-full border px-4 py-1.5 text-sm font-medium capitalize transition",
+                "rounded-full border px-4 py-1.5 text-xs font-bold tracking-[0.15em] uppercase transition",
                 activeCategory === cat
-                  ? "border-green900 bg-green900 text-sand"
-                  : "border-ink/20 hover:border-green900 hover:text-green900",
+                  ? "border-neon bg-neon/15 text-neon shadow-neon"
+                  : "border-cream/15 text-cream/50 hover:border-neon/40 hover:text-neon",
               ].join(" ")}
             >
               {cat}
@@ -73,11 +77,11 @@ export default async function MerchPage({
 
         {/* Grid */}
         {products.length === 0 ? (
-          <div className="rounded-2xl border border-ink/10 bg-white p-12 text-center">
-            <p className="text-ink/60">No hay productos en esta categoría todavía.</p>
+          <div className="panel-card rounded-2xl p-12 text-center">
+            <p className="text-cream/40">No hay productos en esta categoría todavía.</p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((p) => (
               <ProductCard key={p.id} {...p} />
             ))}

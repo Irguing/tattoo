@@ -4,12 +4,8 @@ import * as React from "react";
 import { useCart } from "@/context/CartContext";
 
 type Props = {
-  productId: string;
-  slug: string;
-  name: string;
-  price: number;
-  imageUrl: string | null;
-  stock: number;
+  productId: string; slug: string; name: string;
+  price: number; imageUrl: string | null; stock: number;
 };
 
 export function AddToCartButton({ productId, slug, name, price, imageUrl, stock }: Props) {
@@ -29,9 +25,9 @@ export function AddToCartButton({ productId, slug, name, price, imageUrl, stock 
     return (
       <button
         disabled
-        className="w-full rounded-2xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-400 cursor-not-allowed"
+        className="w-full rounded-full border-2 border-cream/10 px-6 py-3.5 text-sm font-bold tracking-[0.15em] text-cream/30 cursor-not-allowed"
       >
-        Agotado
+        AGOTADO
       </button>
     );
   }
@@ -39,9 +35,18 @@ export function AddToCartButton({ productId, slug, name, price, imageUrl, stock 
   return (
     <button
       onClick={handleAdd}
-      className="w-full rounded-2xl bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 active:scale-95 disabled:opacity-60"
+      className={[
+        "w-full rounded-full border-2 px-6 py-3.5 text-sm font-bold tracking-[0.15em] transition-all duration-300",
+        added || inCart
+          ? "border-neon bg-neon/15 text-neon shadow-neon"
+          : "border-neon bg-neon text-bg shadow-neon hover:bg-transparent hover:text-neon",
+      ].join(" ")}
     >
-      {added ? "¡Agregado ✓" : inCart ? `En el carrito (${inCart.quantity})` : "Agregar al carrito"}
+      {added
+        ? "¡AGREGADO ✓"
+        : inCart
+          ? `EN EL CARRITO (${inCart.quantity})`
+          : "AGREGAR AL CARRITO"}
     </button>
   );
 }
