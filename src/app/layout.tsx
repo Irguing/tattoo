@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${fontDisplay.variable} ${fontBody.variable}`}>
-      <body className="min-h-screen bg-dark text-cream antialiased">
+      <body className="min-h-screen bg-bg text-cream antialiased">
         <CartProvider>
           <LayoutShell>{children}</LayoutShell>
         </CartProvider>

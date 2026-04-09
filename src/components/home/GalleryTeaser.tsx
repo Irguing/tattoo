@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import GalleryTeaserClient from "@/components/home/GalleryTeaser.client";
+import { SectionDivider } from "@/components/home/About";
 
 export const dynamic = "force-dynamic";
 
@@ -41,29 +42,23 @@ export async function GalleryTeaser() {
   }));
 
   return (
-    <section className="relative overflow-hidden bg-dark py-20">
-      {/* Blur spots */}
+    <section className="relative overflow-hidden bg-bg py-20">
+      <div className="halftone absolute inset-0 opacity-40" />
       <div className="pointer-events-none absolute top-0 right-0 h-80 w-80 rounded-full bg-neon/8 blur-[100px]" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 rounded-full bg-purple/8 blur-[80px]" />
 
       <div className="relative mx-auto max-w-6xl px-6">
-        {/* Divider */}
-        <div className="mb-10 flex items-center gap-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cream/15 to-transparent" />
-          <span className="text-xs font-bold tracking-[0.4em] text-cream/30">TRABAJOS</span>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cream/15 to-transparent" />
-        </div>
+        <SectionDivider label="TRABAJOS" />
 
-        <div className="flex items-end justify-between gap-6">
+        <div className="mt-8 flex items-end justify-between gap-6">
           <div>
-            <h2 className="font-display text-6xl tracking-wide text-cream">GALERÍA</h2>
+            <h2 className="font-display text-6xl tracking-wide text-gold">GALERÍA</h2>
             <p className="mt-2 text-cream/50 max-w-xl text-sm">
               Explora una selección de mis tatuajes. Desde piezas pequeñas hasta trabajos a medida.
             </p>
           </div>
           <Link
             href="/designs"
-            className="hidden md:inline-flex rounded-full border border-neon/40 bg-neon/10 px-5 py-2.5 text-xs font-bold tracking-widest text-neon transition hover:bg-neon hover:text-dark"
+            className="hidden md:inline-flex rounded-full border border-neon/30 bg-neon/8 px-5 py-2.5 text-xs font-bold tracking-[0.2em] text-neon transition hover:bg-neon hover:text-bg"
           >
             VER TODOS →
           </Link>
@@ -73,7 +68,7 @@ export async function GalleryTeaser() {
 
         <Link
           href="/designs"
-          className="mt-8 inline-flex md:hidden rounded-full border border-neon/40 bg-neon/10 px-5 py-2.5 text-xs font-bold tracking-widest text-neon transition hover:bg-neon hover:text-dark"
+          className="mt-8 inline-flex md:hidden rounded-full border border-neon/30 bg-neon/8 px-5 py-2.5 text-xs font-bold tracking-[0.2em] text-neon transition hover:bg-neon hover:text-bg"
         >
           VER TODOS →
         </Link>

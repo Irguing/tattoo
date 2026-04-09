@@ -2,85 +2,87 @@ import Link from "next/link";
 
 export function About() {
   return (
-    <section className="relative overflow-hidden bg-dark py-20">
-      {/* Blur spots */}
-      <div className="pointer-events-none absolute top-0 left-0 h-80 w-80 rounded-full bg-purple/10 blur-[100px]" />
-      <div className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-neon/8 blur-[100px]" />
+    <section className="relative overflow-hidden bg-panel py-20">
+      {/* Halftone */}
+      <div className="halftone absolute inset-0 opacity-40" />
+      {/* Glow */}
+      <div className="pointer-events-none absolute top-0 left-0 h-72 w-72 rounded-full bg-neon/8 blur-[100px]" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-gold/6 blur-[100px]" />
 
       <div className="relative mx-auto max-w-6xl px-6">
-        {/* Divider label */}
-        <div className="mb-12 flex items-center gap-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cream/15 to-transparent" />
-          <span className="text-xs font-bold tracking-[0.4em] text-cream/30">EL ESTUDIO</span>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cream/15 to-transparent" />
-        </div>
+        {/* Section label */}
+        <SectionDivider label="EL ESTUDIO" />
 
-        <div className="grid gap-12 md:grid-cols-2 items-center">
-          {/* Imagen placeholder con glow */}
+        <div className="mt-10 grid gap-12 md:grid-cols-2 items-center">
+          {/* Image panel */}
           <div className="relative group">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl border border-cream/10 bg-surface shadow-card">
-              {/* Placeholder con gradiente artístico */}
-              <div className="h-full w-full bg-gradient-to-br from-purple/30 via-dark to-neon/20" />
-              {/* Grid overlay */}
-              <div className="absolute inset-0 opacity-10 [background-image:linear-gradient(cream_1px,transparent_1px),linear-gradient(90deg,cream_1px,transparent_1px)] [background-size:40px_40px]" />
-              {/* Center text */}
+            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl comic-border">
+              <div className="h-full w-full bg-gradient-to-br from-neon/20 via-panel2 to-gold/10" />
+              <div className="halftone absolute inset-0" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-display text-4xl tracking-widest text-cream/15">FOTO</span>
+                <span className="font-display text-5xl tracking-widest text-cream/10">FOTO</span>
               </div>
             </div>
 
-            {/* Badge flotante */}
-            <div className="absolute -bottom-5 -right-5 rounded-2xl border border-neon/30 bg-dark px-5 py-3 shadow-neon">
-              <p className="font-display text-2xl tracking-wide text-neon leading-none">Desde 2021</p>
-              <p className="text-xs text-cream/50 mt-0.5">Madrid · Estudio privado</p>
+            {/* Floating badge */}
+            <div className="absolute -bottom-5 -right-4 animate-float-alt rounded-2xl border border-gold/30 bg-panel px-5 py-3 shadow-gold">
+              <p className="font-display text-2xl tracking-wide text-gold leading-none">Desde 2021</p>
+              <p className="mt-0.5 text-xs text-cream/50">Madrid · Estudio privado</p>
             </div>
 
-            {/* Glow en hover */}
-            <div className="absolute inset-0 rounded-3xl transition-opacity duration-500 opacity-0 group-hover:opacity-100 shadow-[0_0_60px_rgba(155,47,201,0.3)]" />
+            {/* Lightning */}
+            <svg className="absolute -top-3 -left-3 w-7 text-neon/60 animate-lightning" viewBox="0 0 24 48" fill="currentColor">
+              <polygon points="14,0 6,22 13,22 10,48 18,20 11,20" />
+            </svg>
           </div>
 
           {/* Copy */}
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-neon/25 bg-neon/8 px-3 py-1 text-xs font-bold tracking-widest text-neon">
-              ✦ ORIGINALIDAD · CREATIVIDAD · EXPERIMENTACIÓN
+            <span className="inline-flex items-center gap-2 rounded-full border border-neon/25 bg-neon/8 px-4 py-1.5">
+              <span className="text-xs font-bold tracking-[0.25em] text-neon">✦ ORIGINALIDAD · CREATIVIDAD · PASIÓN</span>
             </span>
 
-            <h2 className="mt-5 font-display text-5xl leading-tight tracking-wide md:text-6xl">
-              <span className="text-cream">ARTE QUE</span>
-              <br />
-              <span className="text-shimmer">SE VIVE</span>
+            <h2 className="mt-5 font-display leading-tight tracking-wide">
+              <span className="block text-5xl text-cream md:text-6xl">ARTE QUE</span>
+              <span className="block text-5xl text-gold md:text-6xl">SE VIVE</span>
             </h2>
 
-            <p className="mt-5 text-cream/60 leading-relaxed text-base">
-              Este estudio creativo nace en pleno centro de Madrid pensado para ilustración,
-              tatuaje artístico y talleres presenciales. Aquí el proceso importa tanto como
-              el resultado: cada pieza se diseña con escucha, calma y un enfoque personal.
-            </p>
+            {/* Copy box */}
+            <div className="copy-box mt-5">
+              <p className="text-sm leading-relaxed text-cream/75">
+                En el centro de Madrid, nuestro estudio es un templo del tattoo
+                creativo lleno de vida y buen rollo. Cada tatuaje es único, tratado
+                con mimo y detalle artesano.{" "}
+                <span className="font-bold text-neon">¡Aquí se tatúa con corazón!</span>
+              </p>
+            </div>
 
-            {/* Features */}
-            <ul className="mt-6 space-y-2">
+            {/* Feature list */}
+            <ul className="mt-5 space-y-2.5">
               {[
                 "Diseños 100% personalizados",
+                "New school, color, blackwork, anime",
                 "Ambiente íntimo y privado",
-                "New school, color, blackwork",
-              ].map((feat) => (
-                <li key={feat} className="flex items-center gap-3 text-sm text-cream/70">
-                  <span className="text-neon">◆</span>
-                  {feat}
+                "Cita previa — sin listas de espera eternas",
+              ].map((f) => (
+                <li key={f} className="flex items-center gap-3 text-sm text-cream/70">
+                  <span className="text-neon text-base">◆</span>
+                  {f}
                 </li>
               ))}
             </ul>
 
+            {/* CTAs */}
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/book"
-                className="rounded-full bg-neon px-6 py-3 text-sm font-bold tracking-widest text-dark shadow-neon transition hover:opacity-90"
+                className="rounded-full border-2 border-neon bg-neon px-6 py-3 text-sm font-bold tracking-[0.15em] text-bg shadow-neon transition hover:bg-transparent hover:text-neon"
               >
-                RESERVAR CITA
+                ¡RESERVAR CITA!
               </Link>
               <Link
                 href="/designs"
-                className="rounded-full border border-cream/20 px-6 py-3 text-sm font-bold tracking-widest text-cream/70 transition hover:border-cream/50 hover:text-cream"
+                className="rounded-full border-2 border-cream/15 px-6 py-3 text-sm font-bold tracking-[0.15em] text-cream/70 transition hover:border-neon/40 hover:text-neon"
               >
                 VER GALERÍA →
               </Link>
@@ -89,5 +91,15 @@ export function About() {
         </div>
       </div>
     </section>
+  );
+}
+
+export function SectionDivider({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-neon/25 to-transparent" />
+      <span className="text-[10px] font-bold tracking-[0.5em] text-neon/50">{label}</span>
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-neon/25 to-transparent" />
+    </div>
   );
 }

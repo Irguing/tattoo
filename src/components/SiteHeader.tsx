@@ -20,7 +20,7 @@ export default function SiteHeader() {
       className={[
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         scrolled
-          ? "bg-dark/95 backdrop-blur-md border-b border-cream/5 shadow-card"
+          ? "bg-bg/95 backdrop-blur-md border-b border-neon/10 shadow-card"
           : "bg-transparent",
       ].join(" ")}
     >
@@ -30,15 +30,15 @@ export default function SiteHeader() {
           <Image
             src="/images/logo.png"
             alt="Miko Jester Logo"
-            width={200}
-            height={80}
-            className="h-16 w-auto brightness-0 invert transition-all duration-300 hover:scale-105"
+            width={180}
+            height={72}
+            className="h-14 w-auto brightness-0 invert transition-all duration-300 hover:scale-105 drop-shadow-[0_0_8px_rgba(76,194,29,0.6)]"
             priority
           />
         </Link>
 
         {/* DESKTOP NAV */}
-        <nav className="hidden items-center gap-7 text-xs font-bold tracking-widest md:flex">
+        <nav className="hidden items-center gap-8 text-xs font-bold tracking-[0.2em] md:flex">
           {[
             { href: "/designs", label: "TATTOOS" },
             { href: "/merch",   label: "TIENDA"  },
@@ -47,16 +47,17 @@ export default function SiteHeader() {
             <Link
               key={href}
               href={href}
-              className="text-cream/70 transition hover:text-neon hover:drop-shadow-[0_0_8px_rgba(76,194,29,0.8)]"
+              className="relative text-cream/60 transition-colors duration-200 hover:text-neon after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-neon after:transition-all after:duration-300 hover:after:w-full"
             >
               {label}
             </Link>
           ))}
+
           <Link
             href="/book"
-            className="rounded-full border-2 border-neon bg-neon/10 px-5 py-2 text-xs font-bold tracking-widest text-neon transition hover:bg-neon hover:text-dark animate-border-glow"
+            className="animate-border-pulse rounded-full border-2 border-neon bg-neon/10 px-6 py-2 text-xs font-bold tracking-[0.2em] text-neon transition-all duration-300 hover:bg-neon hover:text-bg hover:shadow-neon"
           >
-            RESERVAR
+            ¡RESERVAR!
           </Link>
           <CartShell />
         </nav>
@@ -67,7 +68,7 @@ export default function SiteHeader() {
           <button
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-            className="rounded-xl p-2 text-cream/70 hover:text-neon transition"
+            className="rounded-xl p-2 text-cream/60 hover:text-neon transition"
           >
             {menuOpen ? (
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -84,17 +85,17 @@ export default function SiteHeader() {
 
       {/* MOBILE DROPDOWN */}
       {menuOpen && (
-        <nav className="border-t border-cream/5 bg-dark/98 backdrop-blur-md px-6 py-4 flex flex-col gap-1 md:hidden">
+        <nav className="border-t border-neon/10 bg-bg/98 backdrop-blur-md px-6 py-4 flex flex-col gap-1 md:hidden">
           {[
-            { href: "/designs", label: "TATTOOS"  },
-            { href: "/merch",   label: "TIENDA"   },
-            { href: "/blog",    label: "BLOG"     },
+            { href: "/designs", label: "TATTOOS" },
+            { href: "/merch",   label: "TIENDA"  },
+            { href: "/blog",    label: "BLOG"    },
           ].map(({ href, label }) => (
             <Link
               key={href}
               href={href}
               onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-3 text-sm font-bold tracking-widest text-cream/70 hover:text-neon hover:bg-neon/5 transition"
+              className="rounded-xl px-4 py-3 text-sm font-bold tracking-[0.2em] text-cream/60 hover:text-neon hover:bg-neon/5 transition"
             >
               {label}
             </Link>
@@ -102,9 +103,9 @@ export default function SiteHeader() {
           <Link
             href="/book"
             onClick={() => setMenuOpen(false)}
-            className="mt-2 rounded-full border-2 border-neon bg-neon/10 px-5 py-3 text-center text-sm font-bold tracking-widest text-neon hover:bg-neon hover:text-dark transition"
+            className="mt-2 rounded-full border-2 border-neon bg-neon/10 px-5 py-3 text-center text-sm font-bold tracking-[0.2em] text-neon hover:bg-neon hover:text-bg transition"
           >
-            RESERVAR
+            ¡RESERVAR CITA!
           </Link>
         </nav>
       )}
