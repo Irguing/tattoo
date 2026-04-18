@@ -84,11 +84,17 @@ export function Hero() {
                 </Link>
               </div>
 
+              {/* Urgency indicator */}
+              <div className="animate-fade-up delay-400 mt-5 flex items-center gap-2">
+                <span className="text-neon text-sm">⚡</span>
+                <span className="text-xs font-bold tracking-[0.2em] text-neon/70 uppercase">Agenda abierta — pocas plazas</span>
+              </div>
+
               {/* Stats row */}
-              <div className="animate-fade-up delay-500 mt-8 flex flex-wrap gap-3">
-                <StatChip value="+120" label="Flash" color="neon" />
-                <StatChip value="100%" label="Custom" color="gold" />
-                <StatChip value="+18" label="Adultos" color="neon" />
+              <div className="animate-fade-up delay-500 mt-4 flex flex-wrap gap-3">
+                <StatChip value="⭐ 4.9" label="Google" color="gold" />
+                <StatChip value="300+" label="Clientes" color="neon" />
+                <StatChip value="5 años" label="Experiencia" color="neon" />
               </div>
             </div>
 

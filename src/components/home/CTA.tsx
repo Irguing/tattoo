@@ -36,7 +36,7 @@ export function CTA() {
         </div>
 
         <h2 className="font-display leading-tight tracking-wide">
-          <span className="block text-5xl text-cream md:text-6xl">¿QUIERES UN TATTO</span>
+          <span className="block text-5xl text-cream md:text-6xl">¿QUIERES UN TATTOO</span>
           <span className="block text-5xl text-gold md:text-7xl">ÚNICO Y ÉPICO?</span>
         </h2>
 
@@ -59,10 +59,10 @@ export function CTA() {
             ¡RESERVAR CITA!
           </Link>
           <Link
-            href="/merch"
+            href="/designs"
             className="rounded-full border-2 border-cream/20 bg-cream/5 px-8 py-4 text-sm font-bold tracking-[0.15em] text-cream transition hover:border-gold/40 hover:bg-gold/8 hover:text-gold"
           >
-            CONTACTAR →
+            VER TRABAJOS →
           </Link>
         </div>
 

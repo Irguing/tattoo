@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Hero } from "@/components/home/Hero";
 import { About, SectionDivider } from "@/components/home/About";
 import { GalleryTeaser } from "@/components/home/GalleryTeaser";
+import { Testimonials } from "@/components/home/Testimonials";
 import { CTA } from "@/components/home/CTA";
 
 const STYLES = [
@@ -45,6 +46,7 @@ export default function Home() {
       <About />
       <StylesSection />
       <GalleryTeaser />
+      <Testimonials />
       <CTA />
     </>
   );
